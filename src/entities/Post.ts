@@ -6,7 +6,6 @@ import { ObjectType, Field, Int} from "type-graphql";
 @ObjectType()
 @Entity()
 export class Post {
-  // [OptionalProps]?: "title" | "updateAt" | "createdAt";
   @Field(() => Int)
   @PrimaryKey()
   id: number;

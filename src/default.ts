@@ -1,10 +1,10 @@
-require('dotenv').config();
-
+import * as dotenv from 'dotenv'
+dotenv.config();
 module.exports = {
-  environment: 'NODE_ENV',
+  environment: process.env.NODE_ENV,
+  __prod__: process.env.NODE_ENV === 'production',
   database: {
-    name: 'DB_NAME'
-  }
+    name: process.env.DB_NAME,
+  },
+  port: process.env.PORT,
 }
-export const __prod__ = process.env.NODE_ENV === 'production';
-export const dbName = process.env.DB_NAME;
