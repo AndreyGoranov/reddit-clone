@@ -1,19 +1,24 @@
 const { __prod__ } = require("./default");
 import { Post } from "./entities/Post";
 import { MikroORM } from "@mikro-orm/core";
-import path from "path";
+import { TSMigrationGenerator } from "@mikro-orm/migrations";
+import { User } from "./entities/User";
 
 //Parameters retunrs Array so we use the first item
 export default {
-  entities: [Post],
+  entities: [Post, User],
   dbName: "lireddit",
   debug: !__prod__,
   type: "postgresql",
   password: "amb093",
   allowGlobalContext: true,
   migrations: {
-    path: path.join(__dirname, "./migrations"),
+    tableName: 'myschema.mikro_orm_migrations',
+    path: "dist/migrations",
     pathTs: "src/migrations",
-    glob: "!(*.d).{js,ts}",
+    transactional: true,
+    generator: TSMigrationGenerator,
+    snapshot: true,
+
   },
 } as Parameters<typeof MikroORM.init>[0];

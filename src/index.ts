@@ -15,6 +15,7 @@ const main = async () => {
   const EntityManager = orm.em.fork({});
   const post = EntityManager.create(Post, { title: "my first page" } as Post);
   EntityManager.persistAndFlush(post);
+  
   const app = express();
 
   const apolloServer = new ApolloServer({

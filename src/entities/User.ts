@@ -5,12 +5,12 @@ import { ObjectType, Field, Int} from "type-graphql";
 
 @ObjectType()
 @Entity()
-export class Post {
+export class User {
   [OptionalProps]?: "title" | "updatedAt" | "createdAt";
 
   @Field(() => Int)
   @PrimaryKey()
-  id: number;
+  id!: number;
 
   @Field(() => String)
   @Property({ type: "date" })
@@ -19,8 +19,11 @@ export class Post {
   @Field(() => String)
   @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt: Date = new Date();
-  
+
   @Field(() => String)
   @Property({ type: "text" })
-  title: string;
+  username!: string;
+
+  @Property({ type: "text" })
+  password!: string; 
 }
