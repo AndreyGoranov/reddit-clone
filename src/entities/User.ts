@@ -1,4 +1,4 @@
-import { Entity, OptionalProps, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 import { ObjectType, Field, Int} from "type-graphql";
 
 // Field is used to expose whatever you want to the graphql schema or hide it if ommit
@@ -6,7 +6,6 @@ import { ObjectType, Field, Int} from "type-graphql";
 @ObjectType()
 @Entity()
 export class User {
-  [OptionalProps]?: "title" | "updatedAt" | "createdAt";
 
   @Field(() => Int)
   @PrimaryKey()
@@ -20,8 +19,8 @@ export class User {
   @Property({ type: "date", onUpdate: () => new Date() })
   updatedAt: Date = new Date();
 
-  @Field(() => String)
-  @Property({ type: "text" })
+  @Field(() => String!)
+  @Property({ type: "text", unique: true })
   username!: string;
 
   @Property({ type: "text" })
