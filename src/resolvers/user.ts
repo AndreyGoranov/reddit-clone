@@ -10,6 +10,7 @@ import {
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
 import argon2 from "argon2";
+import { ErrorConstraint } from "../helpers/enums/errorConstraint";
 
 @InputType()
 class UsernamePasswordInput {
@@ -68,8 +69,19 @@ export class UserResolver {
       password: hashedPassword,
     } as User);
     try {
+      await em.persistAndFlush(user); 
     } catch (err) {
-      await em.persistAndFlush(user);
+      console.log(err, 'ERR');
+      if(err.constraint === ErrorConstraint.UsernameUnique) {
+        return {
+          errors: [
+            {
+              field: 'username',
+              message: 'Username already exists'
+            }
+          ]
+        }
+      }
     }
     return { user };
   }
@@ -77,7 +89,7 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("options") options: UsernamePasswordInput,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
     if (!user) {
@@ -102,6 +114,10 @@ export class UserResolver {
         ],
       };
     }
+    
+    req.session.userId = user.id;
+
+    console.log(req.session.userId);
     await em.persistAndFlush(user);
     return { user };
   }

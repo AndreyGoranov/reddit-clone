@@ -31,6 +31,9 @@ module.exports = {
     database: {
         name: process.env.DB_NAME,
     },
+    redis: {
+        secret: process.env.REDIS_SECRET,
+    },
     port: process.env.PORT,
 };
 //# sourceMappingURL=default.js.map

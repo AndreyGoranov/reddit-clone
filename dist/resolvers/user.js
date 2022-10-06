@@ -19,6 +19,7 @@ exports.UserResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entities/User");
 const argon2_1 = __importDefault(require("argon2"));
+const errorConstraint_1 = require("../helpers/enums/errorConstraint");
 let UsernamePasswordInput = class UsernamePasswordInput {
 };
 __decorate([
@@ -86,13 +87,24 @@ let UserResolver = class UserResolver {
             password: hashedPassword,
         });
         try {
+            await em.persistAndFlush(user);
         }
         catch (err) {
-            await em.persistAndFlush(user);
+            console.log(err, 'ERR');
+            if (err.constraint === errorConstraint_1.ErrorConstraint.UsernameUnique) {
+                return {
+                    errors: [
+                        {
+                            field: 'username',
+                            message: 'Username already exists'
+                        }
+                    ]
+                };
+            }
         }
         return { user };
     }
-    async login(options, { em }) {
+    async login(options, { em, req }) {
         const user = await em.findOne(User_1.User, { username: options.username });
         if (!user) {
             console.log("error");
@@ -116,6 +128,8 @@ let UserResolver = class UserResolver {
                 ],
             };
         }
+        req.session.userId = user.id;
+        console.log(req.session.userId);
         await em.persistAndFlush(user);
         return { user };
     }
