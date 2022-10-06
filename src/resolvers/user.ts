@@ -6,6 +6,7 @@ import {
   InputType,
   Field,
   ObjectType,
+  Query,
 } from "type-graphql";
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
@@ -38,6 +39,17 @@ class UserResponse {
 
 @Resolver()
 export class UserResolver {
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, em }: MyContext) {
+    const userId = req.session.userId;
+    if (!userId) {
+      return null;
+    }
+
+    const user = await em.findOne(User, { id: userId });
+ 
+    return { ...user }; // spread here handles return null for non-nullable field error
+  }
   @Mutation(() => UserResponse)
   async register(
     @Arg("options") options: UsernamePasswordInput,
@@ -69,18 +81,17 @@ export class UserResolver {
       password: hashedPassword,
     } as User);
     try {
-      await em.persistAndFlush(user); 
+      await em.persistAndFlush(user);
     } catch (err) {
-      console.log(err, 'ERR');
-      if(err.constraint === ErrorConstraint.UsernameUnique) {
+      if (err.constraint === ErrorConstraint.UsernameUnique) {
         return {
           errors: [
             {
-              field: 'username',
-              message: 'Username already exists'
-            }
-          ]
-        }
+              field: "username",
+              message: "Username already exists",
+            },
+          ],
+        };
       }
     }
     return { user };
@@ -93,7 +104,6 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const user = await em.findOne(User, { username: options.username });
     if (!user) {
-      console.log("error");
       return {
         errors: [
           {
@@ -114,10 +124,8 @@ export class UserResolver {
         ],
       };
     }
-    
+ 
     req.session.userId = user.id;
-
-    console.log(req.session.userId);
     await em.persistAndFlush(user);
     return { user };
   }

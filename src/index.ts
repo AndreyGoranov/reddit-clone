@@ -11,7 +11,7 @@ import { UserResolver } from "./resolvers/user";
 import session from "express-session";
 import { createClient } from "redis";
 import { MyContext } from "./types";
-declare module 'express-session' {
+declare module "express-session" {
   export interface SessionData {
     userId: number;
     testProp: string;
@@ -27,15 +27,18 @@ const main = async () => {
   // EntityManager.persistAndFlush(post);
 
   const app = express();
-  
-  
+  app.set('trust proxy', true);
+
   const RedisStore = require("connect-redis")(session);
   const redisClient = createClient({ legacyMode: true });
-  redisClient.connect().then(() => console.log('connected to redis')).catch(console.error);
-  
+  redisClient
+    .connect()
+    .then(() => console.log("connected to redis"))
+    .catch(console.error);
+
   app.use(
     session({
-      name: 'ambo',
+      name: "ambo",
       store: new RedisStore({ client: redisClient, disableToch: true }),
       saveUninitialized: false,
       secret: redis.secret,
@@ -43,8 +46,8 @@ const main = async () => {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // ten years,
         httpOnly: true,
-        sameSite: 'lax', // csrf
-        secure: __prod__, // cookie only works in https
+        sameSite: "none", // lax csrf
+        secure: true || __prod__, //__prod__,  cookie only works in https
       },
     })
   );
@@ -59,10 +62,17 @@ const main = async () => {
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      credentials: true,
+      origin: "https://studio.apollographql.com",
+      methods: "GET,PUT,POST,DELETE",
+    },
+  });
 
   app.get("/", (req, res) => {
-    req.session.testProp = 'test my cookie';
+    req.session.testProp = "test my cookie";
     res.send("Home page");
   });
 

@@ -20,11 +20,15 @@ const main = async () => {
     await orm.getMigrator().up();
     const EntityManager = orm.em.fork({});
     const app = (0, express_1.default)();
+    app.set('trust proxy', true);
     const RedisStore = require("connect-redis")(express_session_1.default);
     const redisClient = (0, redis_1.createClient)({ legacyMode: true });
-    redisClient.connect().then(() => console.log('connected to redis')).catch(console.error);
+    redisClient
+        .connect()
+        .then(() => console.log("connected to redis"))
+        .catch(console.error);
     app.use((0, express_session_1.default)({
-        name: 'ambo',
+        name: "ambo",
         store: new RedisStore({ client: redisClient, disableToch: true }),
         saveUninitialized: false,
         secret: redis.secret,
@@ -32,8 +36,8 @@ const main = async () => {
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
             httpOnly: true,
-            sameSite: 'lax',
-            secure: __prod__,
+            sameSite: "none",
+            secure: true || __prod__,
         },
     }));
     const apolloServer = new apollo_server_express_1.ApolloServer({
@@ -44,9 +48,16 @@ const main = async () => {
         context: ({ req, res }) => ({ em: EntityManager, req, res }),
     });
     await apolloServer.start();
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({
+        app,
+        cors: {
+            credentials: true,
+            origin: "https://studio.apollographql.com",
+            methods: "GET,PUT,POST,DELETE",
+        },
+    });
     app.get("/", (req, res) => {
-        req.session.testProp = 'test my cookie';
+        req.session.testProp = "test my cookie";
         res.send("Home page");
     });
     app.listen(4000, () => {
