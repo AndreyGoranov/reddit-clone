@@ -52,7 +52,7 @@ const main = async () => {
         app,
         cors: {
             credentials: true,
-            origin: "https://studio.apollographql.com",
+            origin: ["https://studio.apollographql.com", 'http://localhost:3000'],
             methods: "GET,PUT,POST,DELETE",
         },
     });
