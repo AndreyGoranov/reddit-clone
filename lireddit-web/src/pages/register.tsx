@@ -4,33 +4,34 @@ import Wrapper from "../components/wrapper";
 import { InputField } from "../components/inputField";
 import { Box, Button } from "@chakra-ui/react";
 import { useMutation } from "urql";
+import { RegisterDocument } from "../generated/graphql";
+import { toErrorMap } from "./../utils/toErrorMap";
+import { useRouter } from "next/router";
+import { withUrqlClient } from "next-urql";
+import { createUrqlClient } from "../utils/createUrqlClient";
 
 interface registerProps {
   username: string;
   password: string;
+  email: string;
 }
 
-const REGISTER_MUTATION = `mutation Register($username: String!, $password: String!) {
-  register(options: {username: $username, password: $password}) {
-    errors{
-      field
-      message
-    }
-    user {
-      id
-      username
-    }
-  }
-}`
-
 const Register: React.FC<registerProps> = ({}) => {
-  const [, register] = useMutation(REGISTER_MUTATION);
+  const router = useRouter();
+  const [, register] = useMutation(RegisterDocument);
   return (
     <Wrapper>
       <Formik
-        initialValues={{ username: "", password: "" }}
-        onSubmit={async (values) => {
+        initialValues={{ username: "", password: "", email: "" }}
+        onSubmit={async (values, { setErrors, setSubmitting }) => {
           const response = await register(values);
+          console.log(response);
+          if (response.data?.register?.errors) {
+            setErrors(toErrorMap(response.data.register.errors));
+          } else if (response.data?.register?.user) {
+            setSubmitting(false);
+            router.push("/");
+          }
           return response;
         }}
       >
@@ -50,6 +51,14 @@ const Register: React.FC<registerProps> = ({}) => {
                 type="password"
               />
             </Box>
+            <Box mt={3}>
+              <InputField
+                name="email"
+                placeholder="email"
+                label="Email*"
+                type="email"
+              />
+            </Box>
             <Button
               mt={5}
               colorScheme="teal"
@@ -65,4 +74,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default Register;
+export default withUrqlClient(createUrqlClient)(Register);

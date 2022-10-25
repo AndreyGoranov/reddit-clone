@@ -6,42 +6,39 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
-// import { Post } from "./entities/Post";
 import { UserResolver } from "./resolvers/user";
 import session from "express-session";
-import { createClient } from "redis";
+import Redis from "ioredis";
 import { MyContext } from "./types";
+import { sendEmail } from "./utils/sendEmail";
+
 declare module "express-session" {
   export interface SessionData {
     userId: number;
     testProp: string;
   }
 }
-const { port, redis, __prod__ } = require("./default");
+const { port, redisDependencies, __prod__ } = require("./default");
 
 const main = async () => {
+  await sendEmail("Sup", "agoranovreff@gmail.com");
   const orm = await MikroORM.init(microConfig);
+  // await orm.em.nativeDelete(User, {}); // use to reset User Table
   await orm.getMigrator().up();
   const EntityManager = orm.em.fork({});
-  // const post = EntityManager.create(Post, { title: "my first page" } as Post);
-  // EntityManager.persistAndFlush(post);
 
   const app = express();
-  app.set('trust proxy', true);
+  app.set("trust proxy", true);
 
   const RedisStore = require("connect-redis")(session);
-  const redisClient = createClient({ legacyMode: true });
-  redisClient
-    .connect()
-    .then(() => console.log("connected to redis"))
-    .catch(console.error);
+  const redisClient = new Redis();
 
   app.use(
     session({
       name: "ambo",
       store: new RedisStore({ client: redisClient, disableToch: true }),
       saveUninitialized: false,
-      secret: redis.secret,
+      secret: redisDependencies.secret,
       resave: false,
       cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10, // ten years,
@@ -57,7 +54,12 @@ const main = async () => {
       resolvers: [UserResolver, HelloResolver, PostResolver],
       validate: false,
     }),
-    context: ({ req, res }): MyContext => ({ em: EntityManager, req, res }),
+    context: ({ req, res }): MyContext => ({
+      em: EntityManager,
+      req,
+      res,
+      redisClient,
+    }),
   });
 
   await apolloServer.start();
@@ -66,7 +68,12 @@ const main = async () => {
     app,
     cors: {
       credentials: true,
-      origin: ["https://studio.apollographql.com", 'http://localhost:3000'],
+      origin: [
+        "https://studio.apollographql.com",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://0.0.0.0:3000",
+      ],
       methods: "GET,PUT,POST,DELETE",
     },
   });

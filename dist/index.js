@@ -13,25 +13,23 @@ const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
 const express_session_1 = __importDefault(require("express-session"));
-const redis_1 = require("redis");
-const { port, redis, __prod__ } = require("./default");
+const ioredis_1 = __importDefault(require("ioredis"));
+const sendEmail_1 = require("./utils/sendEmail");
+const { port, redisDependencies, __prod__ } = require("./default");
 const main = async () => {
+    await (0, sendEmail_1.sendEmail)("Sup", "agoranovreff@gmail.com");
     const orm = await core_1.MikroORM.init(mikro_orm_config_1.default);
     await orm.getMigrator().up();
     const EntityManager = orm.em.fork({});
     const app = (0, express_1.default)();
-    app.set('trust proxy', true);
+    app.set("trust proxy", true);
     const RedisStore = require("connect-redis")(express_session_1.default);
-    const redisClient = (0, redis_1.createClient)({ legacyMode: true });
-    redisClient
-        .connect()
-        .then(() => console.log("connected to redis"))
-        .catch(console.error);
+    const redisClient = new ioredis_1.default();
     app.use((0, express_session_1.default)({
         name: "ambo",
         store: new RedisStore({ client: redisClient, disableToch: true }),
         saveUninitialized: false,
-        secret: redis.secret,
+        secret: redisDependencies.secret,
         resave: false,
         cookie: {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
@@ -45,14 +43,24 @@ const main = async () => {
             resolvers: [user_1.UserResolver, hello_1.HelloResolver, post_1.PostResolver],
             validate: false,
         }),
-        context: ({ req, res }) => ({ em: EntityManager, req, res }),
+        context: ({ req, res }) => ({
+            em: EntityManager,
+            req,
+            res,
+            redisClient,
+        }),
     });
     await apolloServer.start();
     apolloServer.applyMiddleware({
         app,
         cors: {
             credentials: true,
-            origin: ["https://studio.apollographql.com", 'http://localhost:3000'],
+            origin: [
+                "https://studio.apollographql.com",
+                "http://localhost:3000",
+                "http://127.0.0.1:3000",
+                "http://0.0.0.0:3000",
+            ],
             methods: "GET,PUT,POST,DELETE",
         },
     });

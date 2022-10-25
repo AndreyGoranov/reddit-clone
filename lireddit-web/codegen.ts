@@ -8,7 +8,8 @@ const config: CodegenConfig = {
   generates: {
     "src/generated": {
       preset: "client",
-      plugins: []
+      plugins: [],
+      config: { withHooks: true },
     }
   }
 };

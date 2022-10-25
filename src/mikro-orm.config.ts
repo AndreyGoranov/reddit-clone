@@ -1,4 +1,4 @@
-const { __prod__ } = require("./default");
+const { __prod__, database } = require("./default");
 import { Post } from "./entities/Post";
 import { MikroORM } from "@mikro-orm/core";
 import { TSMigrationGenerator } from "@mikro-orm/migrations";
@@ -10,7 +10,7 @@ export default {
   dbName: "lireddit",
   debug: !__prod__,
   type: "postgresql",
-  password: "amb093",
+  password: database.password,
   allowGlobalContext: true,
   migrations: {
     tableName: 'myschema.mikro_orm_migrations',

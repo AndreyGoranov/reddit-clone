@@ -1,0 +1,5 @@
+me -> browse http://localhost:3000
+- request to next.js server
+- next.js server will make a request to graphql server to grab the posts
+- building the HTML
+- sending it to your browser
