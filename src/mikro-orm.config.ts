@@ -12,7 +12,7 @@ export default {
   debug: !__prod__,
   portt: 5432,
   type: "postgresql",
-  password: database.password,
+  password: 'amb09326220703',
   allowGlobalContext: true,
   migrations: {
     tableName: 'myschema.mikro_orm_migrations',
