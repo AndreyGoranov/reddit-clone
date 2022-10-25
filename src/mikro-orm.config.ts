@@ -7,7 +7,8 @@ import { User } from "./entities/User";
 //Parameters retunrs Array so we use the first item
 export default {
   entities: [Post, User],
-  dbName: "lireddit",
+  dbName: "reddit",
+  host: 'database-1.coxpeg2fsoy1.us-east-1.rds.amazonaws.com',
   debug: !__prod__,
   type: "postgresql",
   password: database.password,
