@@ -10,6 +10,7 @@ export default {
   dbName: "reddit",
   host: 'database-1.coxpeg2fsoy1.us-east-1.rds.amazonaws.com',
   debug: !__prod__,
+  portt: 5432,
   type: "postgresql",
   password: database.password,
   allowGlobalContext: true,
