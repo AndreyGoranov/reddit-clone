@@ -1,6 +1,5 @@
 import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import NextLink from "next/link";
 import { useMutation, useQuery } from "urql";
 import { LogoutDocument, MeDocument, User } from "../generated/graphql";
 
@@ -34,12 +33,10 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   } else if (!user) {
     body = (
       <Box>
-        <NextLink href="/login">
-          <Link href="/login" mr={3}>Login</Link>
-        </NextLink>
-        <NextLink href="/register">
-          <Link href="/register">Register</Link>
-        </NextLink>
+        <Link href="/login" mr={3}>
+          Login
+        </Link>
+        <Link href="/register">Register</Link>
       </Box>
     );
     //user not logged in
