@@ -6,10 +6,12 @@ const migrations_1 = require("@mikro-orm/migrations");
 const User_1 = require("./entities/User");
 exports.default = {
     entities: [Post_1.Post, User_1.User],
-    dbName: "lireddit",
+    dbName: "reddit",
+    host: 'database-1.coxpeg2fsoy1.us-east-1.rds.amazonaws.com',
     debug: !__prod__,
+    portt: 5432,
     type: "postgresql",
-    password: database.password,
+    password: 'amb09326220703',
     allowGlobalContext: true,
     migrations: {
         tableName: 'myschema.mikro_orm_migrations',

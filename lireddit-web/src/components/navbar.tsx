@@ -14,7 +14,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   const [{ fetching: logoutFetching }, logout] = useMutation(LogoutDocument);
   const [{ data, fetching }] = useQuery({
     query: MeDocument,
-    pause: isServer(),
+    // pause: isServer(),
   });
   let body = null;
 
