@@ -20,47 +20,51 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   let body = null;
 
   useEffect(() => {
-    setUser(data?.me as unknown as User);
-    setIsFetching(fetching);
+    if (data) {
+      setUser(data?.me as unknown as User);
+      setIsFetching(fetching);
+    } 
+    
+    
     setPause(isServer());
   });
 
   // data loading
-  // if (isFetching) {
-  //   body = <Box>Loading...</Box>;
-  // } else if (!user) {
-  //   body = (
-  //     <>
-  //       <NextLink href="/login">
-  //         <Link mr={3}>Login</Link>
-  //       </NextLink>
-  //       <NextLink href="/register">
-  //         <Link>Register</Link>
-  //       </NextLink>
-  //     </>
-  //   );
-  //   //user not logged in
-  // } else {
-  //   body = (
-  //     <>
-  //       <Box mr={2} color="white">
-  //         {user.username}
-  //       </Box>
-  //       <Button
-  //         variant="link"
-  //         color="black"
-  //         onClick={() => {
-  //           console.log("log out clicked");
-  //           logout({});
-  //         }}
-  //         isLoading={logoutFetching}
-  //       >
-  //         Logout
-  //       </Button>
-  //     </>
-  //   );
-  //   // user is logged in
-  // }
+  if (isFetching) {
+    body = <Box>Loading...</Box>;
+  } else if (!user) {
+    body = (
+      <>
+        <NextLink href="/login">
+          <Link mr={3}>Login</Link>
+        </NextLink>
+        <NextLink href="/register">
+          <Link>Register</Link>
+        </NextLink>
+      </>
+    );
+    //user not logged in
+  } else {
+    body = (
+      <>
+        <Box mr={2} color="white">
+          {user.username}
+        </Box>
+        <Button
+          variant="link"
+          color="black"
+          onClick={() => {
+            console.log("log out clicked");
+            logout({});
+          }}
+          isLoading={logoutFetching}
+        >
+          Logout
+        </Button>
+      </>
+    );
+    // user is logged in
+  }
   return (
     <Flex bg="tomato" p={5}>
       <Box ml="auto">Navbar stuff</Box>
