@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
 
   // data loading
   if (isFetching) {
-    // body = <Box>Loading...</Box>;
+    body = <Box>Loading...</Box>;
   } else if (!user) {
     body = (
       <>
