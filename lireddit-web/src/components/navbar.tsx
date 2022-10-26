@@ -23,9 +23,8 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     if (data) {
       setUser(data?.me as unknown as User);
       setIsFetching(fetching);
-    } 
-    
-    
+    }
+
     setPause(isServer());
   });
 
@@ -34,19 +33,19 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     body = <Box>Loading...</Box>;
   } else if (!user) {
     body = (
-      <>
+      <Box>
         <NextLink href="/login">
           <Link mr={3}>Login</Link>
         </NextLink>
         <NextLink href="/register">
           <Link>Register</Link>
         </NextLink>
-      </>
+      </Box>
     );
     //user not logged in
   } else {
     body = (
-      <>
+      <Box>
         <Box mr={2} color="white">
           {user.username}
         </Box>
@@ -61,13 +60,13 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
         >
           Logout
         </Button>
-      </>
+      </Box>
     );
     // user is logged in
   }
   return (
     <Flex bg="tomato" p={5}>
-      <Box ml="auto">Navbar stuff</Box>
+      <Box ml="auto">{body}</Box>
     </Flex>
   );
 };
