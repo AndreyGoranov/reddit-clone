@@ -7,7 +7,7 @@ import { PostsDocument } from "../generated/graphql";
 const Index = () => {
   const [{ data }] = useQuery({ query: PostsDocument });
   console.log(data, "data");
-  return <Navbar />;
+  return <Navbar pageProps />;
 };
 
 export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
