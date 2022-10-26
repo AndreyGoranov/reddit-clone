@@ -35,10 +35,10 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     body = (
       <Box>
         <NextLink href="/login">
-          <Link mr={3}>Login</Link>
+          <Link href="/login" mr={3}>Login</Link>
         </NextLink>
         <NextLink href="/register">
-          <Link>Register</Link>
+          <Link href="/register">Register</Link>
         </NextLink>
       </Box>
     );
