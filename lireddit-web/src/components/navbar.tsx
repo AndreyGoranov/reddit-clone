@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import NextLink from "next/link";
 import { useMutation, useQuery } from "urql";
 import { LogoutDocument, MeDocument, User } from "../generated/graphql";
-import { withUrqlClient } from "next-urql";
-import { createUrqlClient } from "../utils/createUrqlClient";
 
 interface NavbarProps {}
 
@@ -23,7 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   useEffect(() => {
     setUser(data?.me as unknown as User);
     setIsFetching(fetching);
-  }, [data]);
+  });
 
   // data loading
   if (isFetching) {
@@ -68,4 +66,4 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Navbar);
+export default Navbar;
