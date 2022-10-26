@@ -12,15 +12,17 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
   const [{ fetching: logoutFetching }, logout] = useMutation(LogoutDocument);
+  const [pause, setPause] = useState(false);
   const [{ data, fetching }] = useQuery({
     query: MeDocument,
-    // pause: isServer(),
+    pause,
   });
   let body = null;
 
   useEffect(() => {
     setUser(data?.me as unknown as User);
     setIsFetching(fetching);
+    setPause(isServer());
   });
 
   // data loading
