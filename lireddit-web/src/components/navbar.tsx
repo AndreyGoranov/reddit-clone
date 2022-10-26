@@ -21,7 +21,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   useEffect(() => {
     setUser(data?.me as unknown as User);
     setIsFetching(fetching);
-  }, []);
+  }, [data]);
 
   // data loading
   if (isFetching) {
