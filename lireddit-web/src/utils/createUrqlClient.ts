@@ -10,7 +10,8 @@ import {
 import { updateQuery } from "./updateQuery";
 
 export const createUrqlClient = (ssrExchange: any) => ({
-  url: "http://44.204.188.109:4000/graphql",
+  // url: "http://44.204.188.109:4000/graphql",
+  url: "http://localhost:4000/graphql",
   fetchOptions: {
     credentials: "include" as const,
     headers: {

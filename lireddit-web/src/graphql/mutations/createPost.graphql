@@ -1,0 +1,6 @@
+  mutation CreatePost($options: PostInput!) {
+  createPost(options: $options) {
+    title,
+    body,
+  }
+}

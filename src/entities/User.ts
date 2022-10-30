@@ -1,5 +1,12 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Collection,
+  Entity,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
 import { ObjectType, Field, Int } from "type-graphql";
+import { Post } from "./Post";
 
 // Field is used to expose whatever you want to the graphql schema or hide it if ommit
 
@@ -9,6 +16,9 @@ export class User {
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
+
+  @OneToMany(() => Post, (post) => post.creator)
+  posts = new Collection<Post>(this);
 
   @Field(() => String)
   @Property({ type: "date" })

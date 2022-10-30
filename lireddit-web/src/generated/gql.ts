@@ -5,6 +5,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "fragment RegularUser on User {\n  id\n  username\n  email\n}": types.RegularUserFragmentDoc,
     "mutation ChangePassword($token: String!, $newPassword: String!, $confirmPassword: String!) {\n  changePassword(\n    options: {token: $token, newPassword: $newPassword, confirmPassword: $confirmPassword}\n  ) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}": types.ChangePasswordDocument,
+    "mutation CreatePost($options: PostInput!) {\n  createPost(options: $options) {\n    title\n    body\n  }\n}": types.CreatePostDocument,
     "mutation ForgotPassword($email: String!) {\n  forgotPassword(email: $email)\n}": types.ForgotPasswordDocument,
     "mutation Login($username: String!, $password: String!) {\n  login(options: {username: $username, password: $password}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}": types.LoginDocument,
     "mutation Logout {\n  logout\n}": types.LogoutDocument,
@@ -15,6 +16,7 @@ const documents = {
 
 export function graphql(source: "fragment RegularUser on User {\n  id\n  username\n  email\n}"): (typeof documents)["fragment RegularUser on User {\n  id\n  username\n  email\n}"];
 export function graphql(source: "mutation ChangePassword($token: String!, $newPassword: String!, $confirmPassword: String!) {\n  changePassword(\n    options: {token: $token, newPassword: $newPassword, confirmPassword: $confirmPassword}\n  ) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"): (typeof documents)["mutation ChangePassword($token: String!, $newPassword: String!, $confirmPassword: String!) {\n  changePassword(\n    options: {token: $token, newPassword: $newPassword, confirmPassword: $confirmPassword}\n  ) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"];
+export function graphql(source: "mutation CreatePost($options: PostInput!) {\n  createPost(options: $options) {\n    title\n    body\n  }\n}"): (typeof documents)["mutation CreatePost($options: PostInput!) {\n  createPost(options: $options) {\n    title\n    body\n  }\n}"];
 export function graphql(source: "mutation ForgotPassword($email: String!) {\n  forgotPassword(email: $email)\n}"): (typeof documents)["mutation ForgotPassword($email: String!) {\n  forgotPassword(email: $email)\n}"];
 export function graphql(source: "mutation Login($username: String!, $password: String!) {\n  login(options: {username: $username, password: $password}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"): (typeof documents)["mutation Login($username: String!, $password: String!) {\n  login(options: {username: $username, password: $password}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"];
 export function graphql(source: "mutation Logout {\n  logout\n}"): (typeof documents)["mutation Logout {\n  logout\n}"];

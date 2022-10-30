@@ -1,6 +1,23 @@
 import { Post } from "../entities/Post";
-import { Resolver, Query, Mutation, Ctx, Arg } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Ctx,
+  Arg,
+  InputType,
+  Field,
+} from "type-graphql";
 import { MyContext } from "src/types";
+import { wrap } from "@mikro-orm/core";
+
+@InputType()
+class PostInput {
+  @Field()
+  title: string;
+  @Field()
+  body: string;
+}
 
 @Resolver()
 export class PostResolver {
@@ -16,11 +33,18 @@ export class PostResolver {
 
   @Mutation(() => Post)
   async createPost(
-    @Arg("title") title: string,
-    @Ctx() { em }: MyContext
+    @Arg("options") options: PostInput,
+    @Ctx() { em, req }: MyContext
   ): Promise<Post> {
-    const post = em.create(Post, { title });
-    em.create(Post, { title });
+    if (!req.session.userId) {
+      throw new Error("User not authenticated!");
+    }
+
+    const post = em.create(Post, {
+      creator: req.session.userId,
+      ...options,
+    } as unknown as Post);
+
     await em.persistAndFlush(post);
     return post;
   }
@@ -50,6 +74,6 @@ export class PostResolver {
     @Ctx() { em }: MyContext
   ): Promise<boolean> {
     await em.nativeDelete(Post, { id });
-    return true
+    return true;
   }
 }
