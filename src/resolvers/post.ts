@@ -10,6 +10,7 @@ import {
 } from "type-graphql";
 import { MyContext } from "src/types";
 import { wrap } from "@mikro-orm/core";
+import { isAuthenticated } from "../middleware/isAuthenticated";
 
 @InputType()
 class PostInput {
@@ -21,13 +22,18 @@ class PostInput {
 
 @Resolver()
 export class PostResolver {
-  @Query(() => [Post])
-  posts(@Ctx() { em }: MyContext): Promise<Post[]> {
+  @Query(() => [Post], { nullable: true })
+  posts(@Ctx() { em, req }: MyContext): Promise<Post[]> {
+    isAuthenticated(req);
     return em.find(Post, {});
   }
 
   @Query(() => Post, { nullable: true })
-  post(@Arg("id") id: number, @Ctx() { em }: MyContext): Promise<Post | null> {
+  post(
+    @Arg("id") id: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<Post | null> {
+    isAuthenticated(req);
     return em.findOne(Post, { id });
   }
 
@@ -36,9 +42,7 @@ export class PostResolver {
     @Arg("options") options: PostInput,
     @Ctx() { em, req }: MyContext
   ): Promise<Post> {
-    if (!req.session.userId) {
-      throw new Error("User not authenticated!");
-    }
+    isAuthenticated(req);
 
     const post = em.create(Post, {
       creator: req.session.userId,
@@ -53,8 +57,9 @@ export class PostResolver {
   async updatePost(
     @Arg("id") id: number,
     @Arg("title", () => String, { nullable: true }) title: string,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<Post | null> {
+    isAuthenticated(req);
     const post = await em.findOne(Post, { id });
     if (!post) {
       return null;
@@ -71,8 +76,9 @@ export class PostResolver {
   @Mutation(() => Boolean)
   async deletePost(
     @Arg("id") id: number,
-    @Ctx() { em }: MyContext
+    @Ctx() { em, req }: MyContext
   ): Promise<boolean> {
+    isAuthenticated(req);
     await em.nativeDelete(Post, { id });
     return true;
   }
