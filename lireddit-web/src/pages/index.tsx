@@ -35,13 +35,13 @@ const Index = () => {
     <Box>
       {fetching ? <span>Loading...</span> : null}
       <Navbar handleLogout={handleLogout} />
-      <div className="subNav">
-        <Link href="post/createPost">Create Post</Link>
-        <Box onClick={() => handleClick(false)}>All Posts</Box>
-        <Box onClick={() => handleClick(true)}>My Posts</Box>
-      </div>
-      <span>show my posts must be below me</span>
-      <h1>{showMyPosts || "hmm"}</h1>
+      {user ? (
+        <div className="subNav">
+          <Link href="post/createPost">Create Post</Link>
+          <Box onClick={() => handleClick(false)}>All Posts</Box>
+          <Box onClick={() => handleClick(true)}>My Posts</Box>
+        </div>
+      ) : null}
       <Box>
         {user ? <Posts pageProps={null} showMyPosts={showMyPosts} /> : null}
       </Box>

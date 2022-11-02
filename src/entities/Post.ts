@@ -1,7 +1,7 @@
 import {
   Entity,
   ManyToOne,
-  OptionalProps,
+  // OptionalProps,
   PrimaryKey,
   Property,
 } from "@mikro-orm/core";
