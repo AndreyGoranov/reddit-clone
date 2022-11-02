@@ -1,0 +1,11 @@
+.subNav {
+  display: flex;
+  color: white;
+  background-color: brown;
+}
+
+.subNav > * {
+  margin-right: 25px;
+  font-weight: bold;
+  cursor: pointer;
+}

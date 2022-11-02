@@ -67,6 +67,9 @@ const Login: React.FC<loginProps> = ({}) => {
               >
                 Login
               </Button>
+              <Link href="/register" mt={5} fontWeight="thin">
+                Register?
+              </Link>
               <Link mt={5} fontWeight="thin" href="/forgotPassword">
                 Forgot Password?
               </Link>

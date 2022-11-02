@@ -28,6 +28,12 @@ export class PostResolver {
     return em.find(Post, {});
   }
 
+  @Query(() => [Post], { nullable: true })
+  myPosts(@Ctx() { em, req }: MyContext): Promise<Post[]> {
+    isAuthenticated(req);
+    return em.find(Post, { creator: req.session.userId });
+  }
+
   @Query(() => Post, { nullable: true })
   post(
     @Arg("id") id: number,

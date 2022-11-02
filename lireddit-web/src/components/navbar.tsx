@@ -1,16 +1,15 @@
 import { Box, Button, Flex, Link } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useMutation, useQuery } from "urql";
-import { LogoutDocument, MeDocument, User } from "../generated/graphql";
+import { useQuery } from "urql";
+import { MeDocument, User } from "../generated/graphql";
+import { isServer } from "../utils/isServer";
+interface NavbarProps {
+  handleLogout: Function;
+}
 
-interface NavbarProps {}
-
-const isServer = () => typeof window === "undefined";
-
-const Navbar: React.FC<NavbarProps> = ({}) => {
+const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
-  const [{ fetching: logoutFetching }, logout] = useMutation(LogoutDocument);
   const [pause, setPause] = useState(false);
   const [{ data, fetching }] = useQuery({
     query: MeDocument,
@@ -51,9 +50,8 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           color="black"
           onClick={() => {
             console.log("log out clicked");
-            logout({});
+            handleLogout();
           }}
-          isLoading={logoutFetching}
         >
           Logout
         </Button>

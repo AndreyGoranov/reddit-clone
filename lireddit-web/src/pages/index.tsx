@@ -4,28 +4,49 @@ import { createUrqlClient } from "../utils/createUrqlClient";
 import { Box } from "@chakra-ui/layout";
 import Link from "next/link";
 import Posts from "./post/posts";
-import { useAuthGuard } from "../utils/authGuard";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useMutation, useQuery } from "urql";
+import { LogoutDocument, MeDocument } from "../generated/graphql";
 
 const Index = () => {
-  const router = useRouter();
-  const isAuthenticated = useAuthGuard();
+  const [user, setUser] = useState(null);
+  const [showMyPosts, setShowMyPosts] = useState(false);
+  const handleClick = (arg: boolean) => {
+    setShowMyPosts(arg);
+  };
+
+  const [{ data, fetching, error }] = useQuery({
+    query: MeDocument,
+  });
+  const [, logout] = useMutation(LogoutDocument);
+
+  const handleLogout = () => {
+    logout({});
+    setUser(null);
+  };
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/login");
+    if (!fetching) {
+      setUser(data.me);
     }
-  });
+  }, [fetching]);
+
   return (
     <Box>
-      <Navbar />
-      <Link href="post/createPost">Create Post</Link>
+      {fetching ? <span>Loading...</span> : null}
+      <Navbar handleLogout={handleLogout} />
+      <div className="subNav">
+        <Link href="post/createPost">Create Post</Link>
+        <Box onClick={() => handleClick(false)}>All Posts</Box>
+        <Box onClick={() => handleClick(true)}>My Posts</Box>
+      </div>
+      <span>show my posts must be below me</span>
+      <h1>{showMyPosts || "hmm"}</h1>
       <Box>
-        <Posts pageProps={{}} />
+        {user ? <Posts pageProps={null} showMyPosts={showMyPosts} /> : null}
       </Box>
     </Box>
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
+export default withUrqlClient(createUrqlClient)(Index);

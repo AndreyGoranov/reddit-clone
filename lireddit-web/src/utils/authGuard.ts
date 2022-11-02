@@ -1,11 +1,14 @@
 import { useQuery } from "urql";
-import { MeDocument } from "../generated/graphql";
+import { MeDocument, User } from "../generated/graphql";
 
-export const useAuthGuard = () => {
-  const [{ data, error }] = useQuery({ query: MeDocument });
-  if (!data?.me || error) {  
+export const useAuthGuard = (): boolean | User => {
+  const [{ data, fetching, error }] = useQuery({
+    query: MeDocument,
+    requestPolicy: "cache-and-network",
+  });
+  if (!data?.me || error) {
     return false;
   }
 
-  return true;
+  return data.me as unknown as User;
 };

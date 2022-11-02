@@ -18,11 +18,6 @@ import {
 } from "../validation/user/registerValidation";
 import { sendEmail } from "../utils/sendEmail";
 import { v4 } from "uuid";
-// import {
-//   validatePasswordLength,
-//   validatePasswordMatch,
-// } from "src/validation/generic/validatePassword";
-// import { lengthMessage } from "../validation/messages/passwordMsg";
 
 const { redisDependencies } = require("../default");
 @InputType()
@@ -72,14 +67,13 @@ class UserResponse {
 export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
-    const userId = req.session.userId;
-    if (!userId) {
+    const userId = req?.session?.userId;
+    if (userId) {
+      const user = await em.findOne(User, { id: userId });
+      return user;
+    } else {
       return null;
     }
-
-    const user = await em.findOne(User, { id: userId });
-
-    return { user };
   }
   @Mutation(() => UserResponse)
   async register(
