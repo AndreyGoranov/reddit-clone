@@ -12,7 +12,7 @@ const documents = {
     "mutation Register($username: String!, $password: String!, $email: String!) {\n  register(options: {username: $username, password: $password, email: $email}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}": types.RegisterDocument,
     "query Me {\n  me {\n    ...RegularUser\n  }\n}": types.MeDocument,
     "query MyPosts {\n  myPosts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}": types.MyPostsDocument,
-    "query Posts {\n  posts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}": types.PostsDocument,
+    "query Posts($limit: Float!) {\n  posts(limit: $limit) {\n    id\n    createdAt\n    updatedAt\n    title\n    body\n  }\n}": types.PostsDocument,
 };
 
 export function graphql(source: "fragment RegularUser on User {\n  id\n  username\n  email\n}"): (typeof documents)["fragment RegularUser on User {\n  id\n  username\n  email\n}"];
@@ -24,7 +24,7 @@ export function graphql(source: "mutation Logout {\n  logout\n}"): (typeof docum
 export function graphql(source: "mutation Register($username: String!, $password: String!, $email: String!) {\n  register(options: {username: $username, password: $password, email: $email}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"): (typeof documents)["mutation Register($username: String!, $password: String!, $email: String!) {\n  register(options: {username: $username, password: $password, email: $email}) {\n    errors {\n      field\n      message\n    }\n    user {\n      ...RegularUser\n    }\n  }\n}"];
 export function graphql(source: "query Me {\n  me {\n    ...RegularUser\n  }\n}"): (typeof documents)["query Me {\n  me {\n    ...RegularUser\n  }\n}"];
 export function graphql(source: "query MyPosts {\n  myPosts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}"): (typeof documents)["query MyPosts {\n  myPosts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}"];
-export function graphql(source: "query Posts {\n  posts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}"): (typeof documents)["query Posts {\n  posts {\n    id\n    createdAt\n    updatedAt\n    title\n  }\n}"];
+export function graphql(source: "query Posts($limit: Float!) {\n  posts(limit: $limit) {\n    id\n    createdAt\n    updatedAt\n    title\n    body\n  }\n}"): (typeof documents)["query Posts($limit: Float!) {\n  posts(limit: $limit) {\n    id\n    createdAt\n    updatedAt\n    title\n    body\n  }\n}"];
 
 export function graphql(source: string): unknown;
 export function graphql(source: string) {

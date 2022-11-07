@@ -11,6 +11,8 @@ import session from "express-session";
 import Redis from "ioredis";
 import { MyContext } from "./types";
 import { sendEmail } from "./utils/sendEmail";
+// import { Post } from "./entities/Post";
+// import { User } from "./entities/User";
 declare module "express-session" {
   export interface SessionData {
     userId: number;
@@ -20,7 +22,7 @@ declare module "express-session" {
 const { port, redisDependencies, __prod__ } = require("./default");
 
 const main = async () => {
-  await sendEmail("Sup", "agoranovreff@gmail.com");
+  // await sendEmail("Sup", "agoranovreff@gmail.com");
   const orm = await MikroORM.init(microConfig);
   // await orm.em.nativeDelete(User, {}); // use to reset User Table
   // await orm.em.nativeDelete(Post, {}); // use to reset Post Table

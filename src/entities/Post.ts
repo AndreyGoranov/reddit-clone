@@ -1,7 +1,8 @@
 import {
+  Collection,
   Entity,
+  ManyToMany,
   ManyToOne,
-  // OptionalProps,
   PrimaryKey,
   Property,
 } from "@mikro-orm/core";
@@ -13,12 +14,15 @@ import { User } from "./User";
 @ObjectType()
 @Entity()
 export class Post {
-  // [OptionalProps]?: "title" | "updatedAt" | "createdAt"| "body";
-
   @Field(() => Int)
   @PrimaryKey()
   id: number;
 
+  @Field(() => [User])
+  @ManyToMany(() => User, (user) => user.likedPosts, { owner: true })
+  likedBy = new Collection<User>(this) as Collection<User>;
+
+  @Field()
   @ManyToOne()
   creator: User;
 
@@ -37,4 +41,8 @@ export class Post {
   @Field(() => String!)
   @Property({ type: "text" })
   body: string;
+
+  @Field(() => Int, { defaultValue: 0, nullable: true })
+  @Property({ type: "int" })
+  likes?: number;
 }

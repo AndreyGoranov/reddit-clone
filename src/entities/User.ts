@@ -1,6 +1,7 @@
 import {
   Collection,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryKey,
   Property,
@@ -16,6 +17,10 @@ export class User {
   @Field(() => Int)
   @PrimaryKey()
   id!: number;
+
+  @Field(() => [Post])
+  @ManyToMany(() => Post, "likedBy")
+  likedPosts = new Collection<Post>(this);
 
   @OneToMany(() => Post, (post) => post.creator)
   posts = new Collection<Post>(this);

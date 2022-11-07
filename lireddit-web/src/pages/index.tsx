@@ -11,7 +11,8 @@ import { LogoutDocument, MeDocument } from "../generated/graphql";
 const Index = () => {
   const [user, setUser] = useState(null);
   const [showMyPosts, setShowMyPosts] = useState(false);
-  const handleClick = (arg: boolean) => {
+
+  const handleSubNavClick = (arg: boolean) => {
     setShowMyPosts(arg);
   };
 
@@ -26,6 +27,7 @@ const Index = () => {
   };
 
   useEffect(() => {
+    console.log(showMyPosts, "showMyposts in index");
     if (!fetching) {
       setUser(data.me);
     }
@@ -38,8 +40,8 @@ const Index = () => {
       {user ? (
         <div className="subNav">
           <Link href="post/createPost">Create Post</Link>
-          <Box onClick={() => handleClick(false)}>All Posts</Box>
-          <Box onClick={() => handleClick(true)}>My Posts</Box>
+          <span onClick={() => handleSubNavClick(false)}>All Posts</span>
+          <span onClick={() => handleSubNavClick(true)}>My Posts</span>
         </div>
       ) : null}
       <Box>

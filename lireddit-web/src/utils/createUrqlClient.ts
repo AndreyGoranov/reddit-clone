@@ -6,7 +6,11 @@ import {
   MeQuery,
   MeDocument,
   RegisterMutation,
+  CreatePostMutation,
+  PostsQuery,
+  PostsDocument,
 } from "../generated/graphql";
+import posts from "../pages/post/posts";
 import { updateQuery } from "./updateQuery";
 
 export const createUrqlClient = (ssrExchange: any) => ({
@@ -64,6 +68,11 @@ export const createUrqlClient = (ssrExchange: any) => ({
                 }
               }
             );
+          },
+          createPost: (_result: CreatePostMutation, args, cache, info) => {
+            cache.invalidate("Query", "posts", {
+              limit: 500,
+            });
           },
         },
       },

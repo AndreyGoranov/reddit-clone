@@ -19,4 +19,4 @@ const PostLayout: React.FC<postLayoutProps> = ({ title, body }) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient, { ssr: false })(PostLayout);
+export default PostLayout;

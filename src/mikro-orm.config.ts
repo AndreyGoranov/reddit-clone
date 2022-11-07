@@ -7,20 +7,20 @@ import { User } from "./entities/User";
 //Parameters retunrs Array so we use the first item
 export default {
   entities: [Post, User],
-  dbName: "reddit",
-  host: 'database-1.coxpeg2fsoy1.us-east-1.rds.amazonaws.com',
+  dbName: "lireddit",
+  // host: 'database-1.coxpeg2fsoy1.us-east-1.rds.amazonaws.com',
+  host: "localhost",
   debug: !__prod__,
   portt: 5432,
   type: "postgresql",
-  password: 'amb09326220703',
+  password: "amb093",
   allowGlobalContext: true,
   migrations: {
-    tableName: 'myschema.mikro_orm_migrations',
+    tableName: "myschema.mikro_orm_migrations",
     path: "dist/migrations",
     pathTs: "src/migrations",
     transactional: true,
     generator: TSMigrationGenerator,
     snapshot: true,
-
   },
 } as Parameters<typeof MikroORM.init>[0];

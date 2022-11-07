@@ -1,8 +1,9 @@
-query Posts {
-  posts {
+query Posts($limit: Float!) {
+  posts(limit: $limit) {
     id
     createdAt
     updatedAt
     title
+    body
   }
 }

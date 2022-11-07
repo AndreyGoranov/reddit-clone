@@ -7,7 +7,7 @@ import { InputField } from "../../components/inputField";
 import Wrapper from "../../components/wrapper";
 import { CreatePostDocument } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
-import { Textarea, Text } from "@chakra-ui/react";
+import { Textarea } from "@chakra-ui/react";
 import { useState } from "react";
 
 interface createPostProps {
@@ -17,7 +17,9 @@ interface createPostProps {
 
 const CreatePost: React.FC<createPostProps> = ({}) => {
   const [body, setBody] = useState("");
-  const handleBodyInputChange = (e) => setBody(e.target.value);
+  const handleBodyInputChange = (e) => {
+    setBody(e.target.value);
+  };
   const router = useRouter();
   const [, createPost] = useMutation(CreatePostDocument);
   return (
@@ -42,6 +44,7 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
                 onChange={handleBodyInputChange}
                 name="text"
                 placeholder="text..."
+                value={body}
               />
             </Box>
             <Button

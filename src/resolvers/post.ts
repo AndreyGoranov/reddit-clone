@@ -9,9 +9,9 @@ import {
   Field,
 } from "type-graphql";
 import { MyContext } from "src/types";
-import { wrap } from "@mikro-orm/core";
 import { isAuthenticated } from "../middleware/isAuthenticated";
-
+import { mapQueryOrderData } from "../utils/mapQueryOrderData";
+import { Type } from "@mikro-orm/core";
 @InputType()
 class PostInput {
   @Field()
@@ -19,13 +19,16 @@ class PostInput {
   @Field()
   body: string;
 }
-
 @Resolver()
 export class PostResolver {
   @Query(() => [Post], { nullable: true })
-  posts(@Ctx() { em, req }: MyContext): Promise<Post[]> {
+  posts(
+    @Arg("limit") limit: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<Post[]> {
     isAuthenticated(req);
-    return em.find(Post, {});
+
+    return em.find(Post, {}, { orderBy: mapQueryOrderData('ASC'), limit });
   }
 
   @Query(() => [Post], { nullable: true })
@@ -53,6 +56,7 @@ export class PostResolver {
     const post = em.create(Post, {
       creator: req.session.userId,
       ...options,
+      likes: 0,
     } as unknown as Post);
 
     await em.persistAndFlush(post);

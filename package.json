@@ -9,7 +9,10 @@
     "start": "node dist/index.js",
     "start2": "ts-node src/index.ts",
     "watch": "tsc -w",
-    "create:migration": "mikro-orm migration:create"
+    "create:migration": "mikro-orm migration:create",
+    "migrate:up": "npx mikro-orm migration:up",
+    "migrate:down": "npx mikro-orm migration:down",
+    "migrate:refresh": "npx mikro-orm migration:fresh"
   },
   "author": "",
   "license": "ISC",
