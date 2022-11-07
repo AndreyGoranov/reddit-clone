@@ -1,8 +1,12 @@
 import { Box } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
-import { useQuery } from "urql";
+import { useMutation, useQuery } from "urql";
 import Wrapper from "../../components/wrapper";
-import { MyPostsDocument, PostsDocument } from "../../generated/graphql";
+import {
+  LikePostDocument,
+  MyPostsDocument,
+  PostsDocument,
+} from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useEffect, useState } from "react";
 import PostLayout from "../../components/postLayout";
@@ -24,12 +28,14 @@ const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
     useQuery({
       query: MyPostsDocument,
     });
+  const [, likePost] = useMutation(LikePostDocument);
 
-  const likePost = () => {
-    return console.log("like");
+  const handlePostLike = async (postId: number) => {
+    const response = await likePost({ postId });
+    console.log(response?.data?.likePost);
   };
 
-  const dislikePost = () => {
+  const handlePostDislike = async (postId: number) => {
     return console.log("dislike");
   };
 
@@ -46,8 +52,8 @@ const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
   };
 
   const postInteractions = {
-    like: likePost,
-    dislike: dislikePost,
+    like: handlePostLike,
+    dislike: handlePostDislike,
     share: sharePost,
     emote: reactToPost,
     report: reportPost,
@@ -75,7 +81,7 @@ const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
         {posts?.map((post) => (
           <Box key={post.id}>
             <PostLayout {...post} />
-            <PostInteractionBar {...postInteractions}></PostInteractionBar>
+            <PostInteractionBar interact={postInteractions} post={post} />
           </Box>
         ))}
       </Box>

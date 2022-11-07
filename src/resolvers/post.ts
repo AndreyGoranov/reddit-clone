@@ -11,7 +11,9 @@ import {
 import { MyContext } from "src/types";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { mapQueryOrderData } from "../utils/mapQueryOrderData";
-import { Type } from "@mikro-orm/core";
+import { User } from "../entities/User";
+import { Collection } from "@mikro-orm/core";
+import e from "express";
 @InputType()
 class PostInput {
   @Field()
@@ -28,7 +30,7 @@ export class PostResolver {
   ): Promise<Post[]> {
     isAuthenticated(req);
 
-    return em.find(Post, {}, { orderBy: mapQueryOrderData('ASC'), limit });
+    return em.find(Post, {}, { orderBy: mapQueryOrderData("ASC"), limit });
   }
 
   @Query(() => [Post], { nullable: true })
@@ -90,6 +92,37 @@ export class PostResolver {
   ): Promise<boolean> {
     isAuthenticated(req);
     await em.nativeDelete(Post, { id });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async likePost(
+    @Arg("postId") postId: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<boolean> {
+    isAuthenticated(req);
+    const post = await em.findOne(Post, { id: postId });
+    await post?.likedBy.init();
+    const user = await em.findOne(User, { id: req.session.userId });
+    await user?.likedPosts.init();
+
+    console.log(post, user);
+    if (!post) {
+      throw new Error("Can't find post");
+    }
+
+    if (
+      [...post.likedBy]
+        .map((el) => el.id)
+        ?.includes(req.session.userId as number)
+    ) {
+      throw new Error("You already liked that post");
+    } else {
+      if (user) {
+        post.likedBy.add(user);
+        em.persistAndFlush(post);
+      }
+    }
     return true;
   }
 }
