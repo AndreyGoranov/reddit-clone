@@ -22,6 +22,9 @@ export class User {
   @ManyToMany(() => Post, "likedBy")
   likedPosts = new Collection<Post>(this);
 
+  @ManyToMany(() => Post, "dislikedBy")
+  dislikedPosts = new Collection<Post>(this);
+
   @Field(() => [Post])
   @OneToMany(() => Post, (post) => post.creator)
   posts = new Collection<Post>(this);

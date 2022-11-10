@@ -101,13 +101,18 @@ export class PostResolver {
   ): Promise<boolean> {
     isAuthenticated(req);
     const post = await em.findOne(Post, { id: postId });
-    await post?.likedBy.init();
-    const user = await em.findOne(User, { id: req.session.userId });
-    await user?.likedPosts.init();
-
     if (!post) {
       throw new Error("Can't find post");
     }
+    await post?.likedBy.init();
+    await post?.dislikedBy.init();
+
+    const user = await em.findOne(User, { id: req.session.userId });
+    if (!user) {
+      throw new Error("Not Authenticated");
+    }
+    await user?.likedPosts.init();
+    await user?.dislikedPosts.init();
 
     if (
       [...post.likedBy]
@@ -116,11 +121,17 @@ export class PostResolver {
     ) {
       throw new Error("You already liked that post");
     } else {
-      if (user) {
-        post.likedBy.add(user);
-        post.likes++;
-        await em.persistAndFlush(post);
+      if (
+        [...post.dislikedBy]
+          .map((el) => el.id)
+          ?.includes(req.session.userId as number)
+      ) {
+        post.dislikedBy.remove(user);
+        post.dislikes--;
       }
+      post.likedBy.add(user);
+      post.likes++;
+      await em.persistAndFlush(post);
     }
     return true;
   }
@@ -132,29 +143,36 @@ export class PostResolver {
   ): Promise<boolean> {
     isAuthenticated(req);
     const post = await em.findOne(Post, { id: postId });
-    await post?.likedBy.init();
-    const user = await em.findOne(User, { id: req.session.userId });
-    await user?.likedPosts.init();
-
     if (!post) {
       throw new Error("Can't find post");
     }
+    await post?.likedBy.init();
+    await post?.dislikedBy.init();
 
+    const user = await em.findOne(User, { id: req.session.userId });
     if (!user) {
       throw new Error("Not Authenticated");
     }
+    await user?.likedPosts.init();
+    await user?.dislikedPosts.init();
 
     if (
-      [...post.likedBy]
+      [...post.dislikedBy]
         .map((el) => el.id)
         ?.includes(req.session.userId as number)
     ) {
-      post.likedBy.remove(user);
-      post.likes--;
-      await em.persistAndFlush(post);
+      throw new Error("You already disliked that post");
     } else {
-      post.likedBy.add(user);
-      post.likes++;
+      if (
+        [...post.likedBy]
+          .map((el) => el.id)
+          ?.includes(req.session.userId as number)
+      ) {
+        post.likedBy.remove(user);
+        post.likes--;
+      }
+      post.dislikedBy.add(user);
+      post.dislikes++;
       await em.persistAndFlush(post);
     }
     return true;

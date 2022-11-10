@@ -22,6 +22,10 @@ export class Post {
   @ManyToMany(() => User, (user) => user.likedPosts, { owner: true })
   likedBy = new Collection<User>(this) as Collection<User>;
 
+  @Field(() => [User])
+  @ManyToMany(() => User, (user) => user.dislikedPosts, { owner: true })
+  dislikedBy = new Collection<User>(this) as Collection<User>;
+
   @Field()
   @ManyToOne()
   creator: User;
@@ -45,4 +49,8 @@ export class Post {
   @Field(() => Int, { defaultValue: 0, nullable: true })
   @Property({ type: "int" })
   likes: number;
+
+  @Field(() => Int, { defaultValue: 0, nullable: true })
+  @Property({ type: "int" })
+  dislikes: number;
 }
