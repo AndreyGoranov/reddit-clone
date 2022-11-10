@@ -3,6 +3,7 @@ import { withUrqlClient } from "next-urql";
 import { useMutation, useQuery } from "urql";
 import Wrapper from "../../components/wrapper";
 import {
+  DislikePostDocument,
   LikePostDocument,
   MyPostsDocument,
   PostsDocument,
@@ -24,19 +25,27 @@ const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
       limit: pagePostLimit,
     },
   });
-  const [{ data: myPosts, fetching: myPostsFetching, error: myPostsError }] =
-    useQuery({
-      query: MyPostsDocument,
-    });
+  const [
+    { data: myPosts, fetching: myPostsFetching, error: myPostsError },
+    reexecutePostsQuery,
+  ] = useQuery({
+    query: MyPostsDocument,
+  });
   const [, likePost] = useMutation(LikePostDocument);
+  const [, dislikePost] = useMutation(DislikePostDocument);
 
   const handlePostLike = async (postId: number) => {
-    const response = await likePost({ postId });
-    console.log(response?.data?.likePost);
+    const { data, error } = await likePost({ postId });
+    if (!error) {
+      reexecutePostsQuery({ requestPolicy: "network-only" });
+    }
   };
 
   const handlePostDislike = async (postId: number) => {
-    return console.log("dislike");
+    const { data, error } = await dislikePost({ postId });
+    if (!error) {
+      reexecutePostsQuery({ requestPolicy: "network-only" });
+    }
   };
 
   const sharePost = () => {

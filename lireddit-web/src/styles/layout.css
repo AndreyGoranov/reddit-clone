@@ -15,6 +15,7 @@
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
   background-color: rgb(249, 249, 212);
+  min-height: 150px;
 }
 
 .post-layout h1 {
@@ -24,7 +25,7 @@
 
 .postHr {
   height: 2px;
-  background-color: brown;
+  background-color: silver;
   border: 0;
 }
 

@@ -58,6 +58,7 @@ export class PostResolver {
       creator: req.session.userId,
       ...options,
       likes: 0,
+      dislikes: 0,
     } as unknown as Post);
 
     await em.persistAndFlush(post);

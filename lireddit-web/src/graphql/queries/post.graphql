@@ -6,5 +6,6 @@ query Posts($limit: Float!) {
     title
     body
     likes
+    dislikes
   }
 }

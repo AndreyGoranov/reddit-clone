@@ -6,5 +6,6 @@ query MyPosts {
     title
     body
     likes
+    dislikes
   }
 }

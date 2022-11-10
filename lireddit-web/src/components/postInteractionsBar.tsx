@@ -41,11 +41,11 @@ const PostInteractionBar: React.FC<any> = ({
         className="interaction-icon"
         aria-label="dislike"
         icon={<MoonIcon />}
-        onClick={() => interact.dislike()}
+        onClick={() => interact.dislike(post.id)}
       >
         Dislike
       </IconButton>
-      <span>0</span>
+      <span>{post.dislikes}</span>
       <IconButton
         title="Emotes"
         className="interaction-icon"
