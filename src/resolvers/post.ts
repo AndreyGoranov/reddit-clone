@@ -12,8 +12,7 @@ import { MyContext } from "src/types";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { mapQueryOrderData } from "../utils/mapQueryOrderData";
 import { User } from "../entities/User";
-import { Collection } from "@mikro-orm/core";
-import e from "express";
+
 @InputType()
 class PostInput {
   @Field()
@@ -106,7 +105,6 @@ export class PostResolver {
     const user = await em.findOne(User, { id: req.session.userId });
     await user?.likedPosts.init();
 
-    console.log(post, user);
     if (!post) {
       throw new Error("Can't find post");
     }
@@ -120,8 +118,44 @@ export class PostResolver {
     } else {
       if (user) {
         post.likedBy.add(user);
-        em.persistAndFlush(post);
+        post.likes++;
+        await em.persistAndFlush(post);
       }
+    }
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async dislikePost(
+    @Arg("postId") postId: number,
+    @Ctx() { em, req }: MyContext
+  ): Promise<boolean> {
+    isAuthenticated(req);
+    const post = await em.findOne(Post, { id: postId });
+    await post?.likedBy.init();
+    const user = await em.findOne(User, { id: req.session.userId });
+    await user?.likedPosts.init();
+
+    if (!post) {
+      throw new Error("Can't find post");
+    }
+
+    if (!user) {
+      throw new Error("Not Authenticated");
+    }
+
+    if (
+      [...post.likedBy]
+        .map((el) => el.id)
+        ?.includes(req.session.userId as number)
+    ) {
+      post.likedBy.remove(user);
+      post.likes--;
+      await em.persistAndFlush(post);
+    } else {
+      post.likedBy.add(user);
+      post.likes++;
+      await em.persistAndFlush(post);
     }
     return true;
   }

@@ -44,5 +44,5 @@ export class Post {
 
   @Field(() => Int, { defaultValue: 0, nullable: true })
   @Property({ type: "int" })
-  likes?: number;
+  likes: number;
 }

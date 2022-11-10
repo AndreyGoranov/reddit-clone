@@ -10,10 +10,9 @@ interface postLayoutProps {
 
 const PostLayout: React.FC<postLayoutProps> = ({ title, body }) => {
   return (
-    <Box padding={5} mb={5} bgColor="lightblue">
-      <FormLabel>Title</FormLabel>
+    <Box padding={5} className="post-layout">
       <h1>{title}</h1>
-      <FormLabel>Content</FormLabel>
+      <hr className="postHr" />
       <p>{body}</p>
     </Box>
   );

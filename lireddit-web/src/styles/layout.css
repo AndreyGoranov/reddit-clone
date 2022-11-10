@@ -9,3 +9,44 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.post-layout {
+  border: 1px solid brown;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  background-color: rgb(249, 249, 212);
+}
+
+.post-layout h1 {
+  font-weight: bold;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.postHr {
+  height: 2px;
+  background-color: brown;
+  border: 0;
+}
+
+.post-interaction {
+  display: flex;
+  background-color: brown;
+  border: 1px solid brown;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  justify-content:space-evenly;
+}
+
+.post-interaction span{
+  color: white;
+}
+
+.interaction-icon {
+  height: 25px !important;
+  color: white !important;
+  background: tomato !important;
+}
+
+.interaction-icon:not(:first-child) {
+  margin-left: 25px;
+}

@@ -1,5 +1,12 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, IconButton } from "@chakra-ui/react";
 import { Post } from "../generated/graphql";
+import {
+  ArrowRightIcon,
+  ChatIcon,
+  MoonIcon,
+  SunIcon,
+  WarningTwoIcon,
+} from "@chakra-ui/icons";
 
 interface PostInteractions {
   like: Function | null;
@@ -14,19 +21,57 @@ const PostInteractionBar: React.FC<any> = ({
   post,
 }: {
   interact: PostInteractions;
-  post: any;
+  post: Post;
 }) => {
-  console.log(interact, "Interact in interaction");
-  console.log(post, "post in interaction");
+  console.log(post.likes);
   return (
-    <Box padding={5} mb={5} bgColor="orange">
-      {interact ? (
-        <Button onClick={() => interact?.like(post.id)}>Like</Button>
-      ) : null}
-      <Button onClick={() => interact.dislike()}>Dislike</Button>
-      <Button onClick={() => interact.emote()}>React</Button>
-      <Button onClick={() => interact.share()}>Share</Button>
-      <Button onClick={() => interact.report()}>Report</Button>
+    <Box padding={2} mb={5} className="post-interaction">
+      <IconButton
+        aria-label="like"
+        title="Like"
+        className="interaction-icon"
+        icon={<SunIcon />}
+        onClick={() => interact?.like(post.id)}
+      >
+        Like
+      </IconButton>
+      <span>{post.likes}</span>
+      <IconButton
+        title="Dislike"
+        className="interaction-icon"
+        aria-label="dislike"
+        icon={<MoonIcon />}
+        onClick={() => interact.dislike()}
+      >
+        Dislike
+      </IconButton>
+      <span>0</span>
+      <IconButton
+        title="Emotes"
+        className="interaction-icon"
+        aria-label="react"
+        icon={<ChatIcon />}
+        onClick={() => interact.emote()}
+      >
+        React
+      </IconButton>
+      <IconButton
+        aria-label="share"
+        className="interaction-icon"
+        icon={<ArrowRightIcon />}
+        onClick={() => interact.share()}
+      >
+        share
+      </IconButton>
+      <IconButton
+        aria-label="report"
+        className="interaction-icon"
+        icon={<WarningTwoIcon />}
+        onClick={() => interact.report()}
+        title="Report"
+      >
+        Report
+      </IconButton>
     </Box>
   );
 };

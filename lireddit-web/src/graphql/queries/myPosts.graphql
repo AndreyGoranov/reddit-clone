@@ -4,5 +4,7 @@ query MyPosts {
     createdAt
     updatedAt
     title
+    body
+    likes
   }
 }
