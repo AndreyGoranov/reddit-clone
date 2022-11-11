@@ -11,7 +11,7 @@ import {
 import { MyContext } from "src/types";
 import { User } from "../entities/User";
 import argon2 from "argon2";
-import { ErrorConstraint } from "../helpers/enums/errorConstraint";
+import { ErrorConstraint } from "../enums/errorConstraint.enum";
 import {
   validateRegister,
   validateResetPassword,

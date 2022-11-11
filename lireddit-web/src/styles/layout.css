@@ -1,5 +1,6 @@
 .subNav {
   display: flex;
+  justify-content: center;
   color: white;
   background-color: brown;
 }
@@ -8,6 +9,10 @@
   margin-right: 25px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.create-post-link {
+  text-decoration: none !important;
 }
 
 .post-layout {

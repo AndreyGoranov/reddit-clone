@@ -12,37 +12,37 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useEffect, useState } from "react";
 import PostLayout from "../../components/postLayout";
 import PostInteractionBar from "../../components/postInteractionsBar";
-interface postsProps {
-  showMyPosts: boolean;
+import { SubNavbarEnum } from "../../enums/subNavbar.enum";
+interface PostsProps {
+  postFilter: SubNavbarEnum;
 }
 
-const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
+const Posts: React.FC<PostsProps> = ({ postFilter }) => {
   const [posts, setPosts] = useState([]);
   const [pagePostLimit, setPagePostLimit] = useState(500);
-  const [{ data, fetching, error }] = useQuery({
+  const [{ data, fetching, error }, reexecutePostsQuery] = useQuery({
     query: PostsDocument,
     variables: {
       limit: pagePostLimit,
+      filter: postFilter,
     },
   });
-  const [
-    { data: myPosts, fetching: myPostsFetching, error: myPostsError },
-    reexecutePostsQuery,
-  ] = useQuery({
-    query: MyPostsDocument,
-  });
+  const [{ data: myPosts, fetching: myPostsFetching, error: myPostsError }] =
+    useQuery({
+      query: MyPostsDocument,
+    });
   const [, likePost] = useMutation(LikePostDocument);
   const [, dislikePost] = useMutation(DislikePostDocument);
 
   const handlePostLike = async (postId: number) => {
-    const { data, error } = await likePost({ postId });
+    const { error } = await likePost({ postId });
     if (!error) {
       reexecutePostsQuery({ requestPolicy: "network-only" });
     }
   };
 
   const handlePostDislike = async (postId: number) => {
-    const { data, error } = await dislikePost({ postId });
+    const { error } = await dislikePost({ postId });
     if (!error) {
       reexecutePostsQuery({ requestPolicy: "network-only" });
     }
@@ -69,20 +69,17 @@ const Posts: React.FC<postsProps> = ({ showMyPosts }) => {
   };
 
   useEffect(() => {
-    console.log("posts rerender");
     if (error) {
       throw new Error(error.message);
     }
-    if (!fetching && !showMyPosts) {
+    if (!fetching && postFilter !== SubNavbarEnum.MINE) {
       setPosts(data?.posts);
     }
 
-    if (showMyPosts && !myPostsFetching) {
+    if (!myPostsFetching && postFilter === SubNavbarEnum.MINE) {
       setPosts(myPosts?.myPosts);
     }
-  }, [fetching, myPostsFetching, showMyPosts]);
-
-  console.log(posts);
+  }, [fetching, myPostsFetching, postFilter]);
 
   return (
     <Wrapper variant="small">

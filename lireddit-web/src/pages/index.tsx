@@ -2,18 +2,30 @@ import Navbar from "../components/navbar";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Box } from "@chakra-ui/layout";
-import Link from "next/link";
 import Posts from "./post/posts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { LogoutDocument, MeDocument } from "../generated/graphql";
+import SubNavbar from "../components/subNavbar";
+import { SubNavbarEnum } from "../enums/subNavbar.enum";
+import Router from "next/router";
 
 const Index = () => {
   const [user, setUser] = useState(null);
-  const [showMyPosts, setShowMyPosts] = useState(false);
+  const [postFilter, setPostFilter] = useState(SubNavbarEnum.ALL_POSTS);
 
-  const handleSubNavClick = (arg: boolean) => {
-    setShowMyPosts(arg);
+  const handleSubNavClick = (arg: SubNavbarEnum) => {
+    if (arg === SubNavbarEnum.COINS) {
+      Router.push("/coins");
+      return;
+    }
+
+    if (arg === SubNavbarEnum.CREATE_POST) {
+      Router.push("/post/createPost");
+      return;
+    }
+
+    setPostFilter(arg);
   };
 
   const [{ data, fetching, error }] = useQuery({
@@ -27,25 +39,19 @@ const Index = () => {
   };
 
   useEffect(() => {
-    console.log(showMyPosts, "showMyposts in index");
+    console.log("INDEX");
     if (!fetching) {
       setUser(data.me);
     }
-  }, [fetching]);
+  }, [fetching, postFilter]);
 
   return (
     <Box>
       {fetching ? <span>Loading...</span> : null}
       <Navbar handleLogout={handleLogout} />
-      {user ? (
-        <div className="subNav">
-          <Link href="post/createPost">Create Post</Link>
-          <span onClick={() => handleSubNavClick(false)}>All Posts</span>
-          <span onClick={() => handleSubNavClick(true)}>My Posts</span>
-        </div>
-      ) : null}
+      {user ? <SubNavbar handleChoice={handleSubNavClick} /> : null}
       <Box>
-        {user ? <Posts pageProps={null} showMyPosts={showMyPosts} /> : null}
+        {user ? <Posts pageProps={null} postFilter={postFilter} /> : null}
       </Box>
     </Box>
   );

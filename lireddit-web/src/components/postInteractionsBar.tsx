@@ -23,7 +23,6 @@ const PostInteractionBar: React.FC<any> = ({
   interact: PostInteractions;
   post: Post;
 }) => {
-  console.log(post.likes);
   return (
     <Box padding={2} mb={5} className="post-interaction">
       <IconButton

@@ -11,7 +11,9 @@ import {
 import { MyContext } from "src/types";
 import { isAuthenticated } from "../middleware/isAuthenticated";
 import { mapQueryOrderData } from "../utils/mapQueryOrderData";
+import { mapQueryWhereData } from "../utils/mapQueryWhereData";
 import { User } from "../entities/User";
+import { PostFilterEnum } from "../enums/postFilter.enum";
 
 @InputType()
 class PostInput {
@@ -25,11 +27,14 @@ export class PostResolver {
   @Query(() => [Post], { nullable: true })
   posts(
     @Arg("limit") limit: number,
+    @Arg("filter", { nullable: true }) filter: PostFilterEnum,
     @Ctx() { em, req }: MyContext
   ): Promise<Post[]> {
     isAuthenticated(req);
-
-    return em.find(Post, {}, { orderBy: mapQueryOrderData("ASC"), limit });
+    return em.find(Post, mapQueryWhereData(filter), {
+      orderBy: mapQueryOrderData(filter),
+      limit,
+    });
   }
 
   @Query(() => [Post], { nullable: true })
