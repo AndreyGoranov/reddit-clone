@@ -1,5 +1,5 @@
 import React from "react";
-import { SubNavbarEnum } from "../enums/subNavbar.enum";
+// import { NavigationEnum } from "../enums/NavigationEnum";
 
 interface SubNavbarProps {
   handleChoice: Function;
@@ -7,16 +7,18 @@ interface SubNavbarProps {
 
 const SubNavbar: React.FC<SubNavbarProps> = ({ handleChoice }) => {
   return (
-    <div className="subNav">
-      {Object.keys(SubNavbarEnum).map((key) => (
-        <span
-          key={key}
-          className="sub-nav-item"
-          onClick={() => handleChoice(SubNavbarEnum[key])}
-        >
-          {SubNavbarEnum[key]}
-        </span>
-      ))}
+    // <div className="subNav">
+    //   {Object.keys(NavigationEnum).map((key) => (
+    //     <span
+    //       key={key}
+    //       className="sub-nav-item"
+    //       onClick={() => handleChoice(NavigationEnum[key])}
+    //     >
+    //       {NavigationEnum[key]}
+    //     </span>
+    //   ))}
+    <div>
+      pesho
     </div>
   );
 };

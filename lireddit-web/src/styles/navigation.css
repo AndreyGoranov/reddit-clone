@@ -1,0 +1,54 @@
+.label {
+  padding: 16px 24px 8px;
+  color: #878a8c;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.readonly-nav-selection {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    border-radius: var(--chakra-radii-md);
+    font-weight: var(--chakra-fontWeights-semibold);
+    transition-property: var(--chakra-transition-property-common);
+    transition-duration: var(--chakra-transition-duration-normal);
+    height: var(--chakra-sizes-10);
+    min-width: 300px;
+    font-size: var(--chakra-fontSizes-md);
+    background: var(--chakra-colors-white);
+    text-align: start;
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.readonly-nav-selection span {
+  margin-left: 8px;
+}
+
+.nav-menu-item {
+  padding: 8px 24px !important;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+}
+
+.home {
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 50%;
+}
+
+.navbarWrap {
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid #edeff1;
+  justify-content: flex-start;
+  padding: 0 20px;
+}

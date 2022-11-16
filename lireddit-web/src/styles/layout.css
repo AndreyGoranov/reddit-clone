@@ -1,3 +1,31 @@
+.icon::before {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.nav-select option:after {
+  font-weight: 900;
+  font: var(--fa-font-solid);
+}
+
+.asd::before {
+  font-weight: 900;
+  font: var(--fa-font-solid);
+}
+
+.nav-select>.current-menu-item::after {
+  content: "\f557" !important;
+  font-family: "Font Awesome 6 Unicode" !important;
+  font-weight: 900;
+  font-size:2em !important;
+  top:60px !important;
+  position: relative !important;
+  z-index: 9999 !important;
+}
+
 .subNav {
   display: flex;
   justify-content: center;

@@ -12,9 +12,9 @@ import { createUrqlClient } from "../../utils/createUrqlClient";
 import { useEffect, useState } from "react";
 import PostLayout from "../../components/postLayout";
 import PostInteractionBar from "../../components/postInteractionsBar";
-import { SubNavbarEnum } from "../../enums/subNavbar.enum";
+import { FeedsEnum } from "../../enums/navigationEnum";
 interface PostsProps {
-  postFilter: SubNavbarEnum;
+  postFilter: FeedsEnum;
 }
 
 const Posts: React.FC<PostsProps> = ({ postFilter }) => {
@@ -72,11 +72,11 @@ const Posts: React.FC<PostsProps> = ({ postFilter }) => {
     if (error) {
       throw new Error(error.message);
     }
-    if (!fetching && postFilter !== SubNavbarEnum.MINE) {
+    if (!fetching && postFilter !== FeedsEnum.MY_POSTS) {
       setPosts(data?.posts);
     }
 
-    if (!myPostsFetching && postFilter === SubNavbarEnum.MINE) {
+    if (!myPostsFetching && postFilter === FeedsEnum.MY_POSTS) {
       setPosts(myPosts?.myPosts);
     }
   }, [fetching, myPostsFetching, postFilter]);

@@ -7,25 +7,25 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { LogoutDocument, MeDocument } from "../generated/graphql";
 import SubNavbar from "../components/subNavbar";
-import { SubNavbarEnum } from "../enums/subNavbar.enum";
+import { FeedsEnum, OthersEnum } from "../enums/navigationEnum";
 import Router from "next/router";
 
 const Index = () => {
   const [user, setUser] = useState(null);
-  const [postFilter, setPostFilter] = useState(SubNavbarEnum.ALL_POSTS);
+  const [postFilter, setPostFilter] = useState(FeedsEnum.ALL_POSTS);
 
-  const handleSubNavClick = (arg: SubNavbarEnum) => {
-    if (arg === SubNavbarEnum.COINS) {
+  const handleNavigationCLick = (arg: FeedsEnum & OthersEnum) => {
+    if (arg === OthersEnum.COINS) {
       Router.push("/coins");
       return;
     }
 
-    if (arg === SubNavbarEnum.CREATE_POST) {
+    if (arg === OthersEnum.CREATE_POST) {
       Router.push("/post/createPost");
       return;
     }
 
-    setPostFilter(arg);
+    setPostFilter(arg as FeedsEnum);
   };
 
   const [{ data, fetching, error }] = useQuery({
@@ -49,7 +49,7 @@ const Index = () => {
     <Box>
       {fetching ? <span>Loading...</span> : null}
       <Navbar handleLogout={handleLogout} />
-      {user ? <SubNavbar handleChoice={handleSubNavClick} /> : null}
+      {user ? <SubNavbar handleChoice={handleNavigationCLick} /> : null}
       <Box>
         {user ? <Posts pageProps={null} postFilter={postFilter} /> : null}
       </Box>

@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "urql";
 import { MeDocument, User } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
+import { FeedsEnum, OthersEnum } from "../enums/navigationEnum";
+import NavSelect from "./navSelect";
+import { getIcon } from "../utils/getIcon";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface NavbarProps {
   handleLogout: Function;
 }
@@ -10,12 +14,20 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
+  const [selected, setSelected] = useState("");
   const [pause, setPause] = useState(false);
   const [{ data, fetching }] = useQuery({
     query: MeDocument,
     pause,
   });
   let body = null;
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(event.target, "e target");
+    event.preventDefault();
+    setSelected(event.target.value as FeedsEnum | OthersEnum);
+    console.log(selected, "selected");
+  };
 
   useEffect(() => {
     if (data) {
@@ -41,11 +53,14 @@ const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
     //user not logged in
   } else {
     body = (
-      <Box>
-        <Box mr={2} color="white">
+      <Box className="navbar">
+        <FontAwesomeIcon className="home" icon={getIcon(FeedsEnum.HOME)} />
+        <span>reddit</span>
+        <NavSelect handleChoice={handleSelectChange} />
+        <Box ml="auto" mr={2} color="blue">
           {user.username}
         </Box>
-        <Button
+        {/* <Button
           variant="link"
           color="black"
           onClick={() => {
@@ -54,16 +69,13 @@ const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
           }}
         >
           Logout
-        </Button>
+          WILL MOVE IT TO DROPDOWN MENU OF PROFILE
+        </Button> */}
       </Box>
     );
     // user is logged in
   }
-  return (
-    <Flex bg="tomato" p={5}>
-      <Box ml="auto">{body}</Box>
-    </Flex>
-  );
+  return <Box className="navbarWrap">{body}</Box>;
 };
 
 export default Navbar;

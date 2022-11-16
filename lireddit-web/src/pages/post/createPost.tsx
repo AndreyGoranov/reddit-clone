@@ -27,11 +27,11 @@ const CreatePost: React.FC<createPostProps> = ({}) => {
       <Formik
         initialValues={{ title: "", body: "" }}
         onSubmit={async (values) => {
-          const post = await createPost({ options: { ...values, body } });
-          if (!post) {
-            throw new Error("Something went wrong creating your Post!");
-          } else {
+          try {
+            await createPost({ options: { ...values, body } });
             router.push("/");
+          } catch (err) {
+            throw new Error(err);
           }
         }}
       >
