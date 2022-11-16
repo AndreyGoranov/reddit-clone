@@ -4,30 +4,32 @@ import { useQuery } from "urql";
 import { MeDocument, User } from "../generated/graphql";
 import { isServer } from "../utils/isServer";
 import { FeedsEnum, OthersEnum } from "../enums/navigationEnum";
-import NavSelect from "./navSelect";
-import { getIcon } from "../utils/getIcon";
+import NavMenu from "./navMenu";
+import { getIcon } from "../utils/getNavigationIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface NavbarProps {
+  clickable: boolean;
+  selected: FeedsEnum & OthersEnum;
+  handleChoice: Function;
   handleLogout: Function;
+  handleNavigationTools: Function;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  clickable,
+  selected,
+  handleLogout,
+  handleChoice,
+  handleNavigationTools,
+}) => {
   const [user, setUser] = useState(null);
   const [isFetching, setIsFetching] = useState(false);
-  const [selected, setSelected] = useState("");
   const [pause, setPause] = useState(false);
   const [{ data, fetching }] = useQuery({
     query: MeDocument,
     pause,
   });
   let body = null;
-
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target, "e target");
-    event.preventDefault();
-    setSelected(event.target.value as FeedsEnum | OthersEnum);
-    console.log(selected, "selected");
-  };
 
   useEffect(() => {
     if (data) {
@@ -56,7 +58,13 @@ const Navbar: React.FC<NavbarProps> = ({ handleLogout }) => {
       <Box className="navbar">
         <FontAwesomeIcon className="home" icon={getIcon(FeedsEnum.HOME)} />
         <span>reddit</span>
-        <NavSelect handleChoice={handleSelectChange} />
+        <NavMenu
+          clickable={clickable}
+          isSideNav={false}
+          selected={selected}
+          handleNavigationTools={handleNavigationTools}
+          handleChoice={handleChoice}
+        />
         <Box ml="auto" mr={2} color="blue">
           {user.username}
         </Box>

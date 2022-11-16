@@ -6,13 +6,16 @@ import Posts from "./post/posts";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { LogoutDocument, MeDocument } from "../generated/graphql";
-import SubNavbar from "../components/subNavbar";
+import SideNavbar from "../components/sideNavbar";
 import { FeedsEnum, OthersEnum } from "../enums/navigationEnum";
 import Router from "next/router";
 
 const Index = () => {
   const [user, setUser] = useState(null);
   const [postFilter, setPostFilter] = useState(FeedsEnum.ALL_POSTS);
+  const [showSideNav, setShowSideNav] = useState(false);
+  const [clickable, setClickable] = useState(true);
+  const [selectedNavigation, setSelectedNavigation] = useState(FeedsEnum.HOME);
 
   const handleNavigationCLick = (arg: FeedsEnum & OthersEnum) => {
     if (arg === OthersEnum.COINS) {
@@ -25,7 +28,7 @@ const Index = () => {
       return;
     }
 
-    setPostFilter(arg as FeedsEnum);
+    setPostFilter(arg as FeedsEnum & OthersEnum);
   };
 
   const [{ data, fetching, error }] = useQuery({
@@ -38,6 +41,16 @@ const Index = () => {
     setUser(null);
   };
 
+  const handleNavigationTools = () => {
+    setShowSideNav(!showSideNav);
+    setClickable(showSideNav);
+  };
+
+  const handleChoice = (choice: FeedsEnum & OthersEnum) => {
+    setSelectedNavigation(choice);
+    handleNavigationCLick(choice);
+  };
+
   useEffect(() => {
     console.log("INDEX");
     if (!fetching) {
@@ -48,8 +61,21 @@ const Index = () => {
   return (
     <Box>
       {fetching ? <span>Loading...</span> : null}
-      <Navbar handleLogout={handleLogout} />
-      {user ? <SubNavbar handleChoice={handleNavigationCLick} /> : null}
+      <Navbar
+        handleLogout={handleLogout}
+        handleChoice={handleChoice}
+        selected={selectedNavigation as FeedsEnum & OthersEnum}
+        handleNavigationTools={handleNavigationTools}
+        clickable={clickable}
+      />
+      {user && showSideNav ? (
+        <SideNavbar
+          isSideNav={true}
+          selected={selectedNavigation as FeedsEnum & OthersEnum}
+          handleChoice={handleChoice}
+          handleNavigationTools={handleNavigationTools}
+        />
+      ) : null}
       <Box>
         {user ? <Posts pageProps={null} postFilter={postFilter} /> : null}
       </Box>

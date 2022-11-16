@@ -18,7 +18,7 @@
     transition-property: var(--chakra-transition-property-common);
     transition-duration: var(--chakra-transition-duration-normal);
     height: var(--chakra-sizes-10);
-    min-width: 300px;
+    min-width: 270px;
     font-size: var(--chakra-fontSizes-md);
     background: var(--chakra-colors-white);
     text-align: start;
@@ -37,6 +37,7 @@
 .navbar {
   display: flex;
   align-items: center;
+  width: inherit;
 }
 
 .home {
@@ -46,9 +47,68 @@
 }
 
 .navbarWrap {
+  display: flex;
+  width: 100%;
   align-items: center;
   background-color: white;
   border-bottom: 1px solid #edeff1;
   justify-content: flex-start;
   padding: 0 20px;
+  height: 48px;
+}
+
+.menu-button {
+ outline: none !important;
+ background: white !important;
+ height: 30px !important;
+ min-width: 270px !important;
+ text-align: start !important;
+ background: "white" !important;
+ padding: 17px;
+}
+
+.menu-button-active {
+  border: 1px solid #edeff1 !important;
+  border-radius: 4px !important;
+  background: white !important;
+  height: 30px !important;
+  min-width: 270px !important;
+  text-align: start !important;
+  background: "white" !important;
+  padding: 17px;
+}
+
+.menu-button:hover {
+  border: 1px solid #edeff1 !important;
+  border-radius: 4px !important;
+}
+
+.menu-button:focus-visible {
+  box-shadow: none !important;
+}
+
+.menu-list {
+  margin-top: -10px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  min-width: 270px !important;
+  max-height: 482px !important;
+  border-top: none !important;
+  overflow: auto;
+}
+
+.side-menu-list {
+  margin-top: 48px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  min-width: 270px !important;
+  max-height: 482px !important;  
+  border-top: none !important;
+  overflow: auto;
+}
+
+.side-menu-list .close-icon {
+  position: relative;
+  left: 90%;
+  cursor: pointer;
 }
